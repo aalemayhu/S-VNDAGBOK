@@ -96,13 +96,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function downloadAsCSV(entries) {
     const csvRows = [];
-    const headers = Object.keys(entries[0]);
+    const headers = [
+      'date',
+      'mood',
+      'nightSleep',
+      'dayTime',
+      'lastNight',
+      'betterNight',
+    ];
     csvRows.push(headers.join(','));
 
     for (const entry of entries) {
       const values = headers.map((header) => {
         const value = entry[header] || '';
-        return `"${value.replace(/"/g, '""')}"`;
+        // Escape quotes and remove newlines for CSV compatibility
+        return `"${value.toString().replace(/"/g, '""').replace(/\n/g, ' ')}"`;
       });
       csvRows.push(values.join(','));
     }
