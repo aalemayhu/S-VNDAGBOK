@@ -3,7 +3,33 @@ document.addEventListener('DOMContentLoaded', function () {
   const addEntryButton = document.getElementById('add-entry');
   const downloadEntriesButton = document.getElementById('download-entries');
 
-  let entries = JSON.parse(localStorage.getItem('sleepJournalEntries')) || [];
+  function isLocalStorageAvailable() {
+    try {
+      const test = '__storage_test__';
+      localStorage.setItem(test, test);
+      localStorage.removeItem(test);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  let entries = [];
+  try {
+    if (isLocalStorageAvailable()) {
+      entries = JSON.parse(localStorage.getItem('sleepJournalEntries')) || [];
+    } else {
+      console.warn(
+        'LocalStorage is not available. Your entries will not be saved between sessions.'
+      );
+      alert(
+        'Nettleseren din blokkerer lagring av data. Innleggene dine vil ikke bli lagret mellom øktene.'
+      );
+    }
+  } catch (e) {
+    console.error('Error accessing localStorage:', e);
+    alert('Det oppstod en feil ved lasting av tidligere innlegg.');
+  }
 
   function renderEntries() {
     journalEntriesDiv.innerHTML = '';
@@ -50,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Load existing entries on page load
   renderEntries();
 
   journalEntriesDiv.addEventListener('input', function (event) {
@@ -60,19 +85,17 @@ document.addEventListener('DOMContentLoaded', function () {
       const mood = getMoodFromValue(value);
       entries[entryId].mood = mood;
 
-      // Update both emoji and text in the mood-display
       const moodDisplay = event.target.nextElementSibling;
       moodDisplay.querySelector('.mood-emoji').textContent = getMoodEmoji(mood);
       moodDisplay.querySelector('.mood-text').textContent = mood;
 
-      localStorage.setItem('sleepJournalEntries', JSON.stringify(entries));
+      saveEntries();
     }
   });
 
   addEntryButton.addEventListener('click', function () {
     const today = new Date().toLocaleDateString('nb-NO');
 
-    // Check if an entry for today already exists
     if (entries.some((entry) => entry.date === today)) {
       alert('Du har allerede lagt inn en registrering for i dag');
       return;
@@ -87,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
       betterNight: '',
     });
     renderEntries();
-    localStorage.setItem('sleepJournalEntries', JSON.stringify(entries));
+    saveEntries();
   });
 
   downloadEntriesButton.addEventListener('click', function () {
@@ -109,7 +132,6 @@ document.addEventListener('DOMContentLoaded', function () {
     for (const entry of entries) {
       const values = headers.map((header) => {
         const value = entry[header] || '';
-        // Escape quotes and remove newlines for CSV compatibility
         return `"${value.toString().replace(/"/g, '""').replace(/\n/g, ' ')}"`;
       });
       csvRows.push(values.join(','));
@@ -175,6 +197,19 @@ document.addEventListener('DOMContentLoaded', function () {
         return 'Forferdelig';
       default:
         return 'Ok';
+    }
+  }
+
+  function saveEntries() {
+    if (isLocalStorageAvailable()) {
+      try {
+        localStorage.setItem('sleepJournalEntries', JSON.stringify(entries));
+      } catch (e) {
+        console.error('Error saving to localStorage:', e);
+        alert(
+          'Kunne ikke lagre innleggene dine. Vennligst sjekk nettleserinnstillingene dine.'
+        );
+      }
     }
   }
 });
