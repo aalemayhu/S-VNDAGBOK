@@ -1,27 +1,27 @@
 body {
-    font-family: sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f0f0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .container {
-    width: 80%;
-    max-width: 800px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 80%;
+  max-width: 800px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    text-align: center;
-    color: #4A6572;
-    font-family: 'Playfair Display', serif;
+  text-align: center;
+  color: #4a6572;
+  font-family: 'Playfair Display', serif;
 }
 
 .entry {
@@ -29,58 +29,85 @@ h1 {
   padding: 15px 0;
 }
 
-h2{
+h2 {
   font-family: 'Playfair Display', serif;
-  color: #4A6572;
+  color: #4a6572;
 }
 
 .entry label {
-    display: block;
-    margin-bottom: 5px;
+  display: block;
+  margin-bottom: 5px;
   font-weight: bold;
-    color: #4A6572;
+  color: #4a6572;
 }
 
 .entry textarea {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 .entry .rating-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .entry .rating-container label {
-    margin-right: 15px;
+  margin-right: 15px;
 }
 
-.entry .rating-container input[type="radio"] {
+.entry .rating-container input[type='radio'] {
   margin-right: 5px;
 }
-.entry .rating-container label{
+.entry .rating-container label {
   font-weight: normal;
 }
 
 button {
-    display: block;
-    background-color: #6291A1;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 10px auto;
+  display: block;
+  background-color: #6291a1;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px auto;
 }
 
 button:hover {
-    background-color: #4A6572;
+  background-color: #4a6572;
 }
 
 .download-link {
   display: block;
   margin-top: 20px;
+}
+
+.slider-container {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px 0;
+}
+
+.mood-slider {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.mood-display {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.mood-emoji {
+  font-size: 2em;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.mood-text {
+  font-size: 1em;
+  color: #4a6572;
 }

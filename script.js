@@ -13,39 +13,23 @@ document.addEventListener('DOMContentLoaded', function () {
       entryDiv.innerHTML = `
                 <h2>${entry.date || new Date().toLocaleDateString('nb-NO')}</h2>
                 <label>Jeg våknet og følte meg:</label>
-                    <div class="rating-container">
-                        <label>
-                            <input type="radio" name="mood-${index}" value="Fantastisk" ${
-        entry.mood === 'Fantastisk' ? 'checked' : ''
-      }>
-                            Fantastisk
-                        </label>
-                        <label>
-                            <input type="radio" name="mood-${index}" value="Bra" ${
-        entry.mood === 'Bra' ? 'checked' : ''
-      }>
-                            Bra
-                        </label>
-                        <label>
-                            <input type="radio" name="mood-${index}" value="Ok" ${
-        entry.mood === 'Ok' ? 'checked' : ''
-      }>
-                            Ok
-                        </label>
-                        <label>
-                            <input type="radio" name="mood-${index}" value="Ikke bra" ${
-        entry.mood === 'Ikke bra' ? 'checked' : ''
-      }>
-                            Ikke bra
-                        </label>
-                         <label>
-                            <input type="radio" name="mood-${index}" value="Forferdelig" ${
-        entry.mood === 'Forferdelig' ? 'checked' : ''
-      }>
-                            Forferdelig
-                        </label>
+                <div class="slider-container">
+                    <input type="range" 
+                           class="mood-slider" 
+                           data-entry-id="${index}" 
+                           data-field="mood" 
+                           min="1" 
+                           max="5" 
+                           value="${getMoodValue(entry.mood)}"
+                           step="1">
+                    <div class="mood-display">
+                        <span class="mood-emoji">${getMoodEmoji(
+                          entry.mood
+                        )}</span>
+                        <span class="mood-text">${entry.mood || 'Ok'}</span>
                     </div>
-                  <label>Skriv noen ord om hvordan du opplevde nattas søvn:</label>
+                </div>
+                <label>Skriv noen ord om hvordan du opplevde nattas søvn:</label>
                   <textarea data-entry-id="${index}" data-field="nightSleep">${
         entry.nightSleep
       }</textarea>
@@ -69,18 +53,17 @@ document.addEventListener('DOMContentLoaded', function () {
   // Load existing entries on page load
   renderEntries();
 
-  journalEntriesDiv.addEventListener('change', function (event) {
-    if (
-      event.target.tagName === 'TEXTAREA' ||
-      event.target.tagName === 'INPUT'
-    ) {
+  journalEntriesDiv.addEventListener('input', function (event) {
+    if (event.target.classList.contains('mood-slider')) {
       const entryId = event.target.getAttribute('data-entry-id');
-      const field = event.target.getAttribute('data-field');
-      const value =
-        event.target.tagName === 'INPUT'
-          ? event.target.value
-          : event.target.value;
-      entries[entryId][field] = value;
+      const value = event.target.value;
+      const mood = getMoodFromValue(value);
+      entries[entryId].mood = mood;
+
+      // Update both emoji and text in the mood-display
+      const moodDisplay = event.target.nextElementSibling;
+      moodDisplay.querySelector('.mood-emoji').textContent = getMoodEmoji(mood);
+      moodDisplay.querySelector('.mood-text').textContent = mood;
 
       localStorage.setItem('sleepJournalEntries', JSON.stringify(entries));
     }
@@ -134,5 +117,56 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  function getMoodEmoji(mood) {
+    switch (mood) {
+      case 'Fantastisk':
+        return '😁';
+      case 'Bra':
+        return '🙂';
+      case 'Ok':
+        return '😐';
+      case 'Ikke bra':
+        return '🙁';
+      case 'Forferdelig':
+        return '😢';
+      default:
+        return '😐';
+    }
+  }
+
+  function getMoodValue(mood) {
+    switch (mood) {
+      case 'Fantastisk':
+        return 1;
+      case 'Bra':
+        return 2;
+      case 'Ok':
+        return 3;
+      case 'Ikke bra':
+        return 4;
+      case 'Forferdelig':
+        return 5;
+      default:
+        return 3;
+    }
+  }
+
+  function getMoodFromValue(value) {
+    switch (Number(value)) {
+      case 1:
+        return 'Fantastisk';
+      case 2:
+        return 'Bra';
+      case 3:
+        return 'Ok';
+      case 4:
+        return 'Ikke bra';
+      case 5:
+        return 'Forferdelig';
+      default:
+        return 'Ok';
+    }
   }
 });
