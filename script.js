@@ -93,6 +93,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  journalEntriesDiv.addEventListener('input', function (event) {
+    if (event.target.tagName === 'TEXTAREA') {
+      const entryId = event.target.getAttribute('data-entry-id');
+      const field = event.target.getAttribute('data-field');
+      entries[entryId][field] = event.target.value;
+      saveEntries();
+    }
+  });
+
   addEntryButton.addEventListener('click', function () {
     const today = new Date().toLocaleDateString('nb-NO');
 
